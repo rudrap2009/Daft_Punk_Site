@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAFT PUNK // COSMIC FLIGHT CONSOLE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="custom-cursor"></div>
+    <div class="custom-cursor-dot"></div>
+    <canvas id="webgl-canvas"></canvas>
+    <div id="intro-laser"></div>
+    <div id="intro-screen" class="screen active">
+        <div class="intro-title-wrapper">
+            <div class="reveal-wrap">
+                <h1 class="reveal-item glitch" data-text="DAFT">DAFT</h1>
+            </div>
+            <div class="reveal-wrap">
+                <h1 class="reveal-item glitch purple-text" data-text="PUNK">PUNK</h1>
+            </div>
+            <div class="reveal-wrap">
+                <h2 class="reveal-item subtitle">COSMIC FLIGHT SIMULATOR</h2>
+            </div>
+        </div>
+        <button id="start-btn" class="cyber-btn">
+            <span class="btn-text">INITIALIZE ENGINE</span>
+            <span class="btn-glitch"></span>
+        </button>
+    </div>
+    <main id="console-container" class="hidden">
+        <header class="console-header">
+            <div class="logo">
+                DP // SHUTTLE.OS [V_8.0]
+                <span id="core-status" class="core-status booting">// CORE: BOOTING</span>
+            </div>
+            <div class="flight-cue">
+                USE <span class="highlight">MOUSE WHEEL</span> TO ACCELERATE // <span class="highlight">POINTER</span> TO STEER
+            </div>
+            <div class="status-panel">
+                <button id="toggle-calibration-btn" class="cal-toggle-btn">// DIAGNOSTICS</button>
+                <span class="status-label">WARP_SPEED:</span>
+                <span id="speed-readout" class="status-value">0.00</span> LY/S
+                <span class="dot pulse"></span>
+            </div>
+        </header>
+        <section class="left-deck">
+            <div class="deck-title">// AUTOPILOT COORDINATES</div>
+            <div class="era-buttons">
+                <button class="era-btn active" id="btn-homework" data-target-z="50">
+                    <span class="btn-num">01</span>
+                    <span class="btn-label">WARP: HOMEWORK [1997]</span>
+                </button>
+                <button class="era-btn" id="btn-discovery" data-target-z="150">
+                    <span class="btn-num">02</span>
+                    <span class="btn-label">WARP: DISCOVERY [2001]</span>
+                </button>
+                <button class="era-btn" id="btn-ram" data-target-z="250">
+                    <span class="btn-num">03</span>
+                    <span class="btn-label">WARP: R.A.M. [2013]</span>
+                </button>
+            </div>
+        </section>
+        <section class="right-deck">
+            <div class="hologram-card">
+                <div class="hologram-glitch-line"></div>
+                <div class="hologram-header">
+                    <div class="holo-tag">COSMIC_LOG_ACTIVE</div>
+                    <div id="holo-year" class="holo-title-year">1997</div>
+                </div>
+                <div class="hologram-content">
+                    <div class="reveal-wrap"><h3 id="holo-title" class="reveal-item">HOMEWORK</h3></div>
+                    <p id="holo-desc">The album that revolutionized French House. Raw, analog, and uncompromising. Recorded entirely in their bedroom studio using hardware synthesizers.</p>
+                </div>
+                <div class="hologram-media">
+                    <img id="holo-image" src="https://images.unsplash.com/photo-1598653222000-6b7b7a552620?auto=format&fit=crop&w=800&q=80" alt="Era Media" crossorigin="anonymous">
+                </div>
+            </div>
+        </section>
+        <section class="bottom-deck">
+            <div class="synth-radar-container">
+                <div class="panel-label">// HUD_SYNTH_RADAR (CLICK TO INJECT CHIMES)</div>
+                <div class="radar-grid" id="radar-grid">
+                    <div class="radar-sweeper"></div>
+                    <div class="radar-node" data-pitch="261.63"></div>
+                    <div class="radar-node" data-pitch="293.66"></div>
+                    <div class="radar-node" data-pitch="329.63"></div>
+                    <div class="radar-node" data-pitch="349.23"></div>
+                    <div class="radar-node" data-pitch="392.00"></div>
+                    <div class="radar-node" data-pitch="440.00"></div>
+                    <div class="radar-node" data-pitch="493.88"></div>
+                    <div class="radar-node" data-pitch="523.25"></div>
+                </div>
+            </div>
+            <div class="filter-deck">
+                <div class="panel-label">// DUST_DENSITY_FILTER</div>
+                <div class="filter-dial-container">
+                    <input type="range" id="filter-slider" min="100" max="10000" value="10000" class="vertical-slider">
+                    <div class="slider-readout">
+                        <span id="filter-value">10000</span>Hz
+                    </div>
+                </div>
+                <div class="filter-label">SWEEP TO MUFFLE AUDIO & BLUR COSMOS</div>
+            </div>
+            <div class="oscilloscope-deck">
+                <div class="panel-label">// OSCILLOSCOPE_READOUT</div>
+                <div class="oscilloscope-container">
+                    <canvas id="oscilloscope-canvas"></canvas>
+                </div>
+            </div>
+        </section>
+        <section id="calibration-deck" class="calibration-deck hud-hidden">
+            <div class="deck-title">// SHUTTLE DIAGNOSTIC CALIBRATION</div>
+            <div class="calibration-controls">
+                <div class="control-row">
+                    <div class="control-group">
+                        <label>MODEL SCALE: <span id="cal-scale-val">1.00</span>x</label>
+                        <input type="range" id="cal-scale" min="0.1" max="5.0" step="0.05" value="1.0">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group">
+                        <label>ROT X (PITCH): <span id="cal-rot-x-val">0</span>°</label>
+                        <input type="range" id="cal-rot-x" min="-180" max="180" step="5" value="0">
+                    </div>
+                    <div class="control-group">
+                        <label>ROT Y (YAW): <span id="cal-rot-y-val">180</span>°</label>
+                        <input type="range" id="cal-rot-y" min="-180" max="180" step="5" value="180">
+                    </div>
+                    <div class="control-group">
+                        <label>ROT Z (ROLL): <span id="cal-rot-z-val">0</span>°</label>
+                        <input type="range" id="cal-rot-z" min="-180" max="180" step="5" value="0">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group">
+                        <label>HEIGHT OFFSET (Y): <span id="cal-pos-y-val">0.0</span></label>
+                        <input type="range" id="cal-pos-y" min="-5.0" max="5.0" step="0.1" value="0.0">
+                    </div>
+                    <div class="control-group">
+                        <label>DEPTH OFFSET (Z): <span id="cal-pos-z-val">0.0</span></label>
+                        <input type="range" id="cal-pos-z" min="-10.0" max="10.0" step="0.1" value="0.0">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group">
+                        <label>DIAGNOSTIC VISUALIZER</label>
+                        <select id="cal-mat-mode" class="cyber-select">
+                            <option value="original">ORIGINAL BLENDER MATERIALS</option>
+                            <option value="chrome">SPACE CHROME OVERRIDE</option>
+                            <option value="solid">SOLID NEUTRAL GREY</option>
+                            <option value="wireframe">WIREFRAME SKELETON</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group">
+                        <label>LIGHTING RIG</label>
+                        <select id="cal-light-mode" class="cyber-select">
+                            <option value="space">COSMIC ORBIT (DEFAULT)</option>
+                            <option value="studio">STUDIO RENDER (ENV MAP)</option>
+                            <option value="flat">FLAT AMBIENT ONLY</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="calibration-footer">
+                <button id="reset-cal-btn" class="cyber-btn-small">RESET DEFAULTS</button>
+                <button id="close-cal-btn" class="cyber-btn-small">CLOSE</button>
+            </div>
+        </section>
+    </main>
+    <audio id="bg-audio" src="assets/veridis_quo.mp3" loop></audio>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
